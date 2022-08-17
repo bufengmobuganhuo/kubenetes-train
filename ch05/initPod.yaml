@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp
+  labels:
+    name: myapp
+spec:
+  containers:
+  - name: myapp
+    image: busybox:1.28
+    # 显示日期，并休眠3600 s
+    command: ['sh','-c','date && sleep 3600s']
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+      # init容器
+  initContainers:
+    - name: init-container
+      image: busybox:1.28
+      command: ['sh','-c','date && sleep 10s']
+
+
+      
+  
+
+

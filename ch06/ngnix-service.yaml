@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+# service的名称，是以后请求的域名
+  name: my-nginx-service
+spec:
+  selector:
+  # 指示这个service对应了那些Pod，所有带有这个label的Pod都是这个service要负载均衡的对象
+    run: my-nginx
+  ports:
+  # service对外暴露的端口
+  - port: 80
+  # Pod本身暴露的端口，即service会将来自80端口的请求转发给底层容器所暴露的80端口
+    targetPort: 80
+
+
+

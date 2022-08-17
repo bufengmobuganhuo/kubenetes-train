@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: affinity-demo
+  labels:
+    name: affinity-demo
+spec:
+# 亲和性
+  affinity:
+  # 节点亲和性
+    nodeAffinity:
+    # 调度时需要满足的条件
+      requiredDuringSchedulingIgnoredDuringExecution:
+      # 选择节点的规则
+        nodeSelectorTerms:
+        # 匹配规则
+          - matchExpressions:
+            - key: disktype
+              operator: In 
+              values:
+                - ssd
+  containers:
+  - name: nginx
+    image: nginx
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+
+

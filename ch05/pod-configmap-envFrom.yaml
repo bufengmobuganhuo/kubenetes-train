@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dapi-test-pod
+  labels:
+    name: dapi-test-pod
+spec:
+  containers:
+  - name: dapi-test-pod
+    image: busybox
+    command: ["/bin/sh", "-c", "env"]
+    envFrom:
+      - configMapRef:
+      # 引用ConfigMap中配置的键值对
+          name: special-config
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+
+

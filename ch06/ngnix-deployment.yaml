@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-nginx
+spec:
+  selector:
+    matchLabels:
+    # 使用这个标签来寻找Pod
+      run: my-nginx
+      # 副本数量，这个deployment会维持pod的副本数量=2
+  replicas: 2
+  template:
+    metadata:
+      labels:
+      # 定义容器的标签，deployment会维护Pod的标签为这个，deployment会维护容器的状态
+        run: my-nginx
+    spec:
+    # 声明容器，此时就会创建2个Pod
+      containers:
+      - name: my-nginx
+        image: registry.cn-beijing.aliyuncs.com/qingfeng666/nginx:latest
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
+
+

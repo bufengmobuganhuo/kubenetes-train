@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cpu-demo
+  # 指定命名空间
+  namespace: cpu-demo
+  labels:
+    name: cpu-demo
+spec:
+  containers:
+  - name: cpu-demo
+  # 这个镜像会让CPU飙升
+    image: registry.cn-beijing.aliyuncs.com/qingfeng666/stress
+    resources:
+      limits:
+        memory: "128Mi"
+        # 限制最大只能使用1个CPU
+        cpu: "1"
+      requests:
+      # 默认请求0.5个CPU
+        cpu: "0.5"
+    args:
+    # stress镜像中指定使用多少CPU
+      - -cpus
+      - "2"
+    ports:
+      - containerPort: 80
