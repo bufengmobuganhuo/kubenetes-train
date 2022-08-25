@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: minimal-ingress
+  labels:
+    name: minimal-ingress
+spec:
+  rules:
+  # 可以指定- host：xxx，表示该规则适用于域名=xxx的请求，
+  # 如果不指定，则表示适用于所有通过指定IP地址的入站HTTP通信
+  - http:
+      paths:
+      # 对前缀是/testpath的请求进行拦截
+      - pathType: Prefix
+        path: "/testpath"
+        # 网关后对应的Service
+        backend:
+          service:
+            name: test
+            port: 
+              number: 80
