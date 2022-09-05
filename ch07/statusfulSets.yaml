@@ -1,0 +1,51 @@
+# 创建一个Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx
+  labels:
+    app: nginx
+spec:
+# headless service，让创建的服务不走负载均衡，而是直接通过pod id连接到后端
+  clusterIP: None
+  selector:
+    app: nginx
+  ports:
+  - port: 80
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: web
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+  serviceName: "nginx"
+  # 会创建3个statusfull 的 pod
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: nginx
+        image: k8s.gcr.io/nginx-slim:0.8
+        ports:
+        - containerPort: 80
+          name: web
+        volumeMounts:
+        # 使用的挂载卷的名称
+        - name: www
+        # 存储到挂载卷的/data/demo目录下，如果pod被重启，那它挂载的volume是不变的（但是pod id会改变），则重启前的数据还是在的
+          mountPath: /usr/share/nginx/html
+  volumeClaimTemplates:
+  - metadata:
+      name: www
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      storageClassName: "my-storage-class"
+      resources:
+        requests:
+          storage: 1Gi
