@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: pi
+spec:
+# job执行完100秒后，删除job和对应的pod
+# 使用此功能需要开启kubernetes的TTLAfterFinished功能，否则此配置不会生效
+  ttlSecondsAfterFinished: 100
+  template:
+    spec:
+      containers:
+      - name: pi
+        image: registry.cn-beijing.aliyuncs.com/google_registry/perl:5.26
+        # 执行一个命令
+        command: ["perl",  "-Mbignum=bpi", "-wle", "print bpi(2000)"]
+      restartPolicy: Never
+      # 指定job失败后的重试次数
+  backoffLimit: 4
+
+
+

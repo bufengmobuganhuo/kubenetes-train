@@ -1,3 +1,50 @@
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: datadirv1
+  labels: 
+    type: local
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: my-storage-class
+  # 要挂载到的宿主机的路径
+  hostPath:
+    path: /tmp/data1
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: datadirv2
+  labels: 
+    type: local
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: my-storage-class
+  hostPath:
+    path: /tmp/data2
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: datadirv3
+  labels: 
+    type: local
+spec:
+  capacity:
+    storage: 5Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: my-storage-class
+  hostPath:
+    path: /tmp/data3
+---
 # 创建一个Service
 apiVersion: v1
 kind: Service
@@ -31,14 +78,15 @@ spec:
     spec:
       containers:
       - name: nginx
-        image: k8s.gcr.io/nginx-slim:0.8
+        image: registry.cn-beijing.aliyuncs.com/qingfeng666/nginx:latest
         ports:
         - containerPort: 80
           name: web
         volumeMounts:
         # 使用的挂载卷的名称
         - name: www
-        # 存储到挂载卷的/data/demo目录下，如果pod被重启，那它挂载的volume是不变的（但是pod id会改变），则重启前的数据还是在的
+        # 存储到挂载卷的/data/demo目录下，如果pod被重启/删除，那它挂载的volume是不变的（但是pod id会改变），
+        # 则重启/删除前的数据还是在的
           mountPath: /usr/share/nginx/html
   volumeClaimTemplates:
   - metadata:
@@ -49,3 +97,14 @@ spec:
       resources:
         requests:
           storage: 1Gi
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: my-storage-class
+provisioner: kubernetes.io/no-provisioner
+volumeBindingMode: WaitForFirstConsumer
+# Supported policies: Delete, Retain
+reclaimPolicy: Delete
+
+
