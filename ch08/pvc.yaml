@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-demo
+spec:
+  resources:
+    requests:
+      storage: 2Gi
+      # 需要与持久卷相同
+  volumeMode: Filesystem
+  # 需要与持久卷相同的访问模式
+  accessModes:
+    - ReadWriteOnce
+  #   # 只从包含“release:stable”的PV中申请卷
+  # selector:
+  #   matchLabels:
+  #     release: "stable"
+
+

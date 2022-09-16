@@ -9,7 +9,7 @@ spec:
   - name: hostpath-pod
     image: nginx
     volumeMounts:
-    # 挂载的卷在容器中的路径
+    # 挂载的卷在容器中的路径，容器在这个目录下的修改会同步给宿主机的/tmp/nginx
     - mountPath: /test-nginx
       name: my-host-path
     resources:
@@ -22,6 +22,8 @@ spec:
   volumes:
     - name: my-host-path
       hostPath:
-      # 宿主机中的目录
+      # 宿主机中的目录，宿主机在这个目录下的修改会同步给容器的/test-nginx
         path: /tmp/nginx
         type: DirectoryOrCreate
+
+

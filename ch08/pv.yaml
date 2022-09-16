@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-demo
+spec:
+  capacity:
+    storage: 5Gi
+  volumeMode: Filesystem
+  accessModes:
+  # 每次只允许一个worker Node进行读写，保证不会出现读写冲突
+    - ReadWriteOnce
+    # 可回收的
+  persistentVolumeReclaimPolicy: Recycle
+  storageClassName: slow
+  mountOptions:
+    - hard
+    - nfsvers=4.1
+    # 挂载的存储类型是NFS
+  nfs:
+    path: /nfsdata
+    server: master
