@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: kubeblog
+spec:
+  selector:
+    app: kubeblog
+  type: NodePort
+  ports:
+  # service对外暴露的端口
+  - port: 5000
+  # Pod本身暴露的端口，即service会将来自5000端口的请求转发给底层容器所暴露的5000端口
+    targetPort: 5000
+    # 将来自宿主机的30002的流量转发到service的5000端口，然后service再转发给pod
+    nodePort: 30002
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kubeblog
+spec:
+  selector:
+    matchLabels:
+      app: kubeblog
+  template:
+    metadata:
+      labels:
+        app: kubeblog
+    spec:
+      hostAliases: 
+      - ip: "192.168.56.101"
+        hostnames: 
+        - "art.local"
+      containers:
+      - name: kubeblog
+        image: 192.168.56.101:8081/docker-local/kubeblog:1.0
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5000
+        env: 
+          - name: MYSQL_SERVER
+            value: "192.168.56.103"
+          - name: MYSQL_PORT
+            value: "30306"
+          - name: MYSQL_DB_NAME
+            value: "blogDBTest"
+          - name: MYSQL_USER_TEST
+            value: "root"
+            # 使用kubernetes的secret导入MySQL的密钥
+          - name: MYSQL_PASSWORD_TEST
+            valueFrom: 
+            # 使用密钥中指定的键值对
+              secretKeyRef: 
+                name: mysql-password-test
+                key: MYSQL_PASSWORD_TEST
+            # 配置拉取镜像的密钥
+      imagePullSecrets: 
+        - name: "regcred-local-zy"

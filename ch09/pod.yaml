@@ -7,7 +7,7 @@ spec:
   - name: myapp
     image: busybox
     # 展示环境变量
-    command: ["/bin/sh", "-c", "env|grep app"]
+    command: ["/bin/sh", "-ce", "sleep 36000"]
     # 指定环境变量从哪里来
     envFrom:
       - configMapRef:
