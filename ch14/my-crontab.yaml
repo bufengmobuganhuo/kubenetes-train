@@ -1,0 +1,11 @@
+apiVersion: "stable.example.com/v1"
+# 在ch14/my-crd.yaml中定义的kind字段
+kind: CronTab
+metadata:
+  name: my-new-cron-object
+spec:
+# 在ch14/my-crd.yaml中定义的参数
+  cronSpec: "* * * * */5"
+  image: my-awesome-cron-image
+
+

@@ -24,10 +24,15 @@ spec:
               properties:
                 cronSpec:
                   type: string
+                  # 规定当前字符串的格式
+                  pattern: '^(\d+|\*)(/\d+)?(\s+(\d+|\*)(/\d+)?){4}'
                 image:
                   type: string
                 replicas:
                   type: integer
+                  # 规定可以接受的最大值最小值
+                  mininum: 1
+                  maxinum: 10
   # 限制自定义资源的作用域，可以是Namespaced或Cluster
   scope: Namespaced
   names:
@@ -42,3 +47,4 @@ spec:
     # shortNames allow shorter string to match your resource on the CLI
     shortNames:
     - ct
+
