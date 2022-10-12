@@ -1,0 +1,44 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  # name must match the spec fields below, and be in the form: <plural>.<group>
+  name: crontabs.stable.example.com
+spec:
+  # group名字，最终生成的REST API：/apis/<group>/version
+  group: stable.example.com
+  # 列出当前自定义资源支持的版本
+  versions:
+    - name: v1
+      # 是否启用当前版本
+      served: true
+      # 只有一个版本storage可以=TRUE
+      storage: true
+      schema:
+        openAPIV3Schema:
+        # 类型是一个对象
+          type: object
+          # 描述对象有什么字段，长什么样子
+          properties:
+            spec:
+              type: object
+              properties:
+                cronSpec:
+                  type: string
+                image:
+                  type: string
+                replicas:
+                  type: integer
+  # 限制自定义资源的作用域，可以是Namespaced或Cluster
+  scope: Namespaced
+  names:
+    # URL: /apis/<group>/<version>/<plural>
+    plural: crontabs
+    # singular name to be used as an alias on the CLI and for display
+    # 当前自定义资源的一个简化名字
+    singular: crontab
+    # kind is normally the CamelCased singular type. Your resource manifests use this.
+    # CalmelCased格式
+    kind: CronTab
+    # shortNames allow shorter string to match your resource on the CLI
+    shortNames:
+    - ct
